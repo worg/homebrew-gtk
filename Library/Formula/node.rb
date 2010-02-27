@@ -5,8 +5,6 @@ class Node <Formula
   head 'git://github.com/ry/node.git'
   homepage 'http://nodejs.org/'
   md5 'a9e0ba08539edbdc8e5611e7550f1c47'
-
-  aka 'node.js'
   
   depends_on 'gnutls' => :recommended
   

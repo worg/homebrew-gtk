@@ -4,8 +4,6 @@ require 'hardware'
 class Mongodb <Formula
   homepage 'http://www.mongodb.org/'
 
-  aka :mongo
-
   if Hardware.is_64_bit? and not ARGV.include? '--32bit'
     url 'http://downloads.mongodb.org/osx/mongodb-osx-x86_64-1.2.4.tgz'
     md5 '775835b5038b6724a27bb7d804acb079'

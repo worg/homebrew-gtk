@@ -5,8 +5,6 @@ class Perforce <Formula
   homepage 'http://www.perforce.com/'
   md5 '63e7c7ee9d3533173f0c4b3a8f88121e'
   version '2009.2.232252'
-  
-  aka 'p4'
 
   def install
     bin.install 'p4'

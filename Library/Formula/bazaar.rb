@@ -4,8 +4,6 @@ class Bazaar <Formula
   url 'http://launchpad.net/bzr/2.1/2.1.0/+download/bzr-2.1.0.tar.gz'
   md5 'ea184d6cfb22cf4e92ee275f593ca88d'
   homepage 'http://bazaar-vcs.org/'
-  
-  aka :bzr
 
   def install
     ENV.minimal_optimization
