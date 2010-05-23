@@ -16,7 +16,8 @@ class Gtkx <Formula
   def install
     system "./configure", "--disable-debug", "--disable-dependency-tracking",
                           "--prefix=#{prefix}",
-                          "--disable-glibtest"
+                          "--disable-glibtest",
+                          "--with-gdktarget=quartz"
     system "make install"
   end
 end
