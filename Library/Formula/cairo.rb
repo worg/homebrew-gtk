@@ -16,8 +16,7 @@ class Cairo <Formula
     system "./configure", "--disable-dependency-tracking",
                           "--prefix=#{prefix}",
                           "--enable-quartz=yes",
-                          "--enable-quartz-font=yes",
-                          "--with-x"
+                          "--enable-quartz-font=yes"
     system "make install"
   end
 end
