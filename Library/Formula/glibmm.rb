@@ -1,15 +1,16 @@
 require 'formula'
 
 class Glibmm <Formula
-  url 'http://ftp.gnome.org/pub/GNOME/sources/glibmm/2.22/glibmm-2.22.2.tar.bz2'
-  sha256 '4e278546171000c2db28ef1ec8bcb23db894a5709f8b0129e05874b4492a8842'
+  url 'http://ftp.gnome.org/pub/GNOME/sources/glibmm/2.22/glibmm-2.22.2.tar.gz'
   homepage 'http://www.gtkmm.org/'
+  md5 '90ff0a5bd5987431cf36f0aa0160a753'
 
-  depends_on 'glib'
+  depends_on 'pkg-config'
   depends_on 'libsigc++'
+  depends_on 'glib'
 
   def install
-    system "./configure", "--prefix=#{prefix}"
+    system "./configure", "--disable-dependency-tracking", "--prefix=#{prefix}"
     system "make install"
   end
 end
