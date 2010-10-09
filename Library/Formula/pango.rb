@@ -18,7 +18,8 @@ class Pango <Formula
     cairo_pkgconfig = File.join(Formula.factory("cairo").prefix, 'lib', 'pkgconfig')
     ENV['PKG_CONFIG_PATH'] = cairo_pkgconfig
 
-    system "./configure", "--prefix=#{prefix}", "--without-x"
+    fails_with_llvm "Undefined symbols when linking", :build => "2326"
+    system "./configure", "--prefix=#{prefix}", "--with-x"
     system "make install"
   end
 end
