@@ -18,7 +18,6 @@ class Glib <Formula
   depends_on 'gettext'
 
   def patches
-    mp = "http://trac.macports.org/export/69965/trunk/dports/devel/glib2/files/"
     mp = "https://svn.macports.org/repository/macports/trunk/dports/devel/glib2/files/"
     {
       :p0 => [
@@ -38,6 +37,8 @@ class Glib <Formula
 
   def install
     fails_with_llvm "Undefined symbol errors while linking"
+
+    ENV.universal_binary
 
     # Snow Leopard libiconv doesn't have a 64bit version of the libiconv_open
     # function, which breaks things for us, so we build our own
@@ -69,7 +70,7 @@ class Glib <Formula
     system "./configure", *args
 
     # Fix for 64-bit support, from MacPorts
-    curl "http://trac.macports.org/export/69965/trunk/dports/devel/glib2/files/config.h.ed", "-O"
+    curl "https://svn.macports.org/repository/macports/trunk/dports/devel/glib2/files/config.h.ed", "-O"
     system "ed - config.h < config.h.ed"
 
     system "make"
