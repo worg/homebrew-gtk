@@ -1,81 +1,84 @@
 require 'formula'
 
-class Libiconv <Formula
-  url 'http://ftp.gnu.org/pub/gnu/libiconv/libiconv-1.13.1.tar.gz'
-  md5 '7ab33ebd26687c744a37264a330bbe9a'
-  homepage 'http://www.gnu.org/software/libiconv/'
-end
-
 def build_tests?; ARGV.include? '--test'; end
 
-class Glib <Formula
+class Glib < Formula
   homepage 'http://developer.gnome.org/glib/'
   url 'ftp://ftp.gnome.org/pub/gnome/sources/glib/2.30/glib-2.30.3.tar.xz'
   sha256 'e6cbb27c71c445993346e785e8609cc75cea2941e32312e544872feba572dd27'
 
-  depends_on 'autoconf'
-  depends_on 'pkg-config'
-  depends_on 'gettext'
   depends_on 'xz' => :build
+  depends_on 'gettext'
   depends_on 'libffi'
 
+  fails_with :llvm do
+    build 2334
+    cause "Undefined symbol errors while linking"
+  end
+
+  fails_with :clang do
+    build 318
+    cause <<-EOS.undent
+      Software that links against a clang-built glib experiences runtime errors:
+        GLib-ERROR (recursed) **: The thread system is not yet initialized.
+      EOS
+  end
+
   def patches
-    mp = "http://trac.macports.org/export/69965/trunk/dports/devel/glib2/files/"
-    mp = "https://svn.macports.org/repository/macports/trunk/dports/devel/glib2/files/"
-    {
-      :p0 => [
-        mp+"patch-configure.ac.diff",
-        mp+"patch-glib-2.0.pc.in.diff",
-        mp+"patch-glib_gunicollate.c.diff",
-        mp+"patch-gi18n.h.diff",
-        mp+"patch-gio_xdgmime_xdgmime.c.diff",
-        mp+"patch-child-test.c.diff"
-      ]
-    }
+    { :p0 => %W[
+      https://trac.macports.org/export/87537/trunk/dports/devel/glib2/files/patch-configure.diff
+      https://trac.macports.org/export/87537/trunk/dports/devel/glib2/files/patch-glib-2.0.pc.in.diff
+      https://trac.macports.org/export/87537/trunk/dports/devel/glib2/files/patch-glib_gunicollate.c.diff
+      https://trac.macports.org/export/87537/trunk/dports/devel/glib2/files/patch-gi18n.h.diff
+      https://trac.macports.org/export/87537/trunk/dports/devel/glib2/files/patch-gio_xdgmime_xdgmime.c.diff
+      https://trac.macports.org/export/87537/trunk/dports/devel/glib2/files/patch-gio_gdbusprivate.c.diff
+      ]}
   end
 
   def options
-    [['--test', 'Build a debug build and run tests. NOTE: Tests may hang on "unix-streams".']]
+  [
+    ['--universal', 'Build universal binaries.'],
+    ['--test', 'Build a debug build and run tests. NOTE: Tests may hang on "unix-streams".']
+  ]
   end
 
   def install
-    fails_with_llvm "Undefined symbol errors while linking"
-
-    # Snow Leopard libiconv doesn't have a 64bit version of the libiconv_open
-    # function, which breaks things for us, so we build our own
-    # http://www.mail-archive.com/gtk-list@gnome.org/msg28747.html
-
-    iconvd = Pathname.getwd+'iconv'
-    iconvd.mkpath
-
-    Libiconv.new.brew do
-      system "./configure", "--disable-debug", "--disable-dependency-tracking",
-                            "--prefix=#{iconvd}",
-                            "--enable-static", "--disable-shared"
-      system "make install"
-    end
+    ENV.universal_binary if ARGV.build_universal?
 
     # indeed, amazingly, -w causes gcc to emit spurious errors for this package!
     ENV.enable_warnings
 
-    # Statically link to libiconv so glib doesn't use the bugged version in 10.6
-    ENV['LDFLAGS'] += " #{iconvd}/lib/libiconv.a"
-
     args = ["--disable-dependency-tracking", "--disable-rebuilds",
             "--prefix=#{prefix}",
-            "--with-libiconv=gnu"]
+            "--disable-dtrace"]
 
     args << "--disable-debug" unless build_tests?
 
-    system Formula.factory("autoconf").bin+"autoconf"
+    # MacPorts puts "@@PREFIX@@" in patches and does inreplace on the files,
+    # so we must follow suit if we use their patches
+    inreplace ['gio/xdgmime/xdgmime.c', 'gio/gdbusprivate.c'] do |s|
+      s.gsub! '@@PREFIX@@', HOMEBREW_PREFIX
+    end
+
+    # glib and pkg-config <= 0.26 have circular dependencies, so we should build glib without pkg-config
+    # The pkg-config dependency can be eliminated if certain env variables are set
+    # Note that this *may* need to be updated if any new dependencies are added in the future
+    # See http://permalink.gmane.org/gmane.comp.package-management.pkg-config/627
+    ENV['ZLIB_CFLAGS'] = ''
+    ENV['ZLIB_LIBS'] = '-lz'
+    # libffi include paths are dramatically ugly
+    libffi = Formula.factory('libffi')
+    ENV['LIBFFI_CFLAGS'] = "-I #{libffi.lib}/libffi-#{libffi.version}/include"
+    ENV['LIBFFI_LIBS'] = '-lffi'
+
     system "./configure", *args
 
     # Fix for 64-bit support, from MacPorts
-    curl "http://trac.macports.org/export/69965/trunk/dports/devel/glib2/files/config.h.ed", "-O"
+    curl "https://trac.macports.org/export/87537/trunk/dports/devel/glib2/files/config.h.ed", "-O"
     system "ed - config.h < config.h.ed"
 
     system "make"
-    # Supress a folder already exists warning during install
+    # Suppress a folder already exists warning during install
     # Also needed for running tests
     ENV.j1
     system "make test" if build_tests?
@@ -95,5 +98,33 @@ class Glib <Formula
     end
 
     (share+'gtk-doc').rmtree
+  end
+
+  def test
+    unless Formula.factory("pkg-config").installed?
+      puts "pkg-config is required to run this test, but is not installed"
+      exit 1
+    end
+
+    mktemp do
+      (Pathname.pwd/'test.c').write <<-EOS.undent
+        #include <string.h>
+        #include <glib.h>
+
+        int main(void)
+        {
+            gchar *result_1, *result_2;
+            char *str = "string";
+
+            result_1 = g_convert(str, strlen(str), "ASCII", "UTF-8", NULL, NULL, NULL);
+            result_2 = g_convert(result_1, strlen(result_1), "UTF-8", "ASCII", NULL, NULL, NULL);
+
+            return (strcmp(str, result_2) == 0) ? 0 : 1;
+        }
+        EOS
+      system ENV.cc, "-o", "test", "test.c",
+        *`pkg-config --cflags --libs glib-2.0`.split
+      system "./test"
+    end
   end
 end
