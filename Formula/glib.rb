@@ -51,6 +51,7 @@ class Glib <Formula
       system "./configure", "--disable-debug", "--disable-dependency-tracking",
                             "--prefix=#{iconvd}",
                             "--enable-static", "--disable-shared"
+
       system "make install"
     end
 
@@ -62,7 +63,8 @@ class Glib <Formula
 
     args = ["--disable-dependency-tracking", "--disable-rebuilds",
             "--prefix=#{prefix}",
-            "--with-libiconv=gnu"]
+            "--with-libiconv=gnu",
+            "--without-x"]
 
     args << "--disable-debug" unless build_tests?
 
