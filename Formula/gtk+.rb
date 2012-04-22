@@ -11,7 +11,7 @@ class Gtkx < Formula
   depends_on 'jpeg'
   depends_on 'libtiff'
   depends_on 'gdk-pixbuf'
-  depends_on 'pango'
+  depends_on 'worg/gtk/pango'
   depends_on 'jasper' => :optional
   depends_on 'atk' => :optional
 
