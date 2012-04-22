@@ -14,7 +14,8 @@ class Libtiff < Formula
     system "./configure", "--disable-dependency-tracking",
                           "--prefix=#{prefix}",
                           "--mandir=#{man}",
-                          "--with-apple-opengl-framework"
+                          "--with-apple-opengl-framework",
+                          "--enable-shared"
     system "make install"
   end
 end

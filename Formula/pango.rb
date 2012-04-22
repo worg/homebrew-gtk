@@ -12,7 +12,11 @@ class Pango < Formula
 
   depends_on 'pkg-config' => :build
   depends_on 'glib'
-
+  
+  def options
+    [["--universal", "Builds a universal binary"]]
+  end
+  
   if MacOS.leopard?
     depends_on 'fontconfig' # Leopard's fontconfig is too old.
     depends_on 'worg/gtk/cairo' # Leopard doesn't come with Cairo.
@@ -46,6 +50,7 @@ class Pango < Formula
   end
 
   def install
+    ENV.universal_binary if ARGV.build_universal?
     system "./configure", "--disable-dependency-tracking",
                           "--disable-debug",
                           "--prefix=#{prefix}",

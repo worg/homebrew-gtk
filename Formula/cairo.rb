@@ -16,7 +16,14 @@ class Cairo < Formula
     cause "Throws an 'lto could not merge' error during build."
   end
 
+  #http://git.gnome.org/browse/gtk-osx/plain/patches/0001-quartz-Fix-the-32-bits-build-on-MacOSX-10.7.patch
+
+  def options
+    [["--universal", "Builds a universal binary"]]
+  end
+
   def install
+    ENV.universal_binary if ARGV.build_universal?
     system "./configure", "--disable-dependency-tracking",
                           "--prefix=#{prefix}",
                           "--enable-quartz=yes",

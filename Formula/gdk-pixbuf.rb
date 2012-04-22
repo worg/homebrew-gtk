@@ -8,9 +8,9 @@ class GdkPixbuf < Formula
   depends_on 'pkg-config' => :build
   depends_on 'xz' => :build
   depends_on 'glib'
-  depends_on 'jasper'
-  depends_on 'libtiff'
-
+  depends_on 'worg/gtk/jasper'
+  depends_on 'worg/gtk/libtiff'
+  
   # 'loaders.cache' must be writable by other packages
   skip_clean 'lib/gdk-pixbuf-2.0'
 
@@ -27,8 +27,9 @@ class GdkPixbuf < Formula
                           "--with-libjasper",
                           "--enable-introspection=no",
                           "--disable-Bsymbolic",
-                          "--without-gdiplus"
-                          "--without-x11"
+                          "--without-gdiplus",
+                          "--without-x11",
+                          "--disable-glibtest"
     system "make"
     system "make install"
 
