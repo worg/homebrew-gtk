@@ -13,7 +13,7 @@ class Gtkx < Formula
   depends_on 'gdk-pixbuf'
   depends_on 'worg/gtk/pango'
   depends_on 'jasper' => :optional
-  depends_on 'atk' => :optional
+  depends_on 'worg/gtk/atk' => :optional
 
   fails_with :llvm do
     build 2326

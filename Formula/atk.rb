@@ -16,7 +16,8 @@ class Atk < Formula
     ENV.universal_binary if ARGV.build_universal?
     system "./configure", "--disable-dependency-tracking",
                           "--prefix=#{prefix}",
-                          "--enable-introspection=no"
+                          "--enable-introspection=no",
+                          "--disable-glibtest"
     system "make"
     system "make install"
   end
