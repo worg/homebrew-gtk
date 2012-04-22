@@ -28,6 +28,7 @@ class GdkPixbuf < Formula
                           "--enable-introspection=no",
                           "--disable-Bsymbolic",
                           "--without-gdiplus"
+                          "--without-x11"
     system "make"
     system "make install"
 
