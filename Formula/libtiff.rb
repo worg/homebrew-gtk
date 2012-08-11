@@ -2,8 +2,8 @@ require 'formula'
 
 class Libtiff < Formula
   homepage 'http://www.remotesensing.org/libtiff/'
-  url 'http://download.osgeo.org/libtiff/tiff-3.9.5.zip'
-  sha256 '332d1a658340c41791fce62fb8fff2a5ba04c2e82b8b85e741eb0a7b30e0d127'
+  url 'http://download.osgeo.org/libtiff/tiff-4.0.2.tar.gz'
+  sha256 'aa29f1f5bfe3f443c3eb4dac472ebde15adc8ff0464b83376f35e3b2fef935da'
 
   def options
     [["--universal", "Builds a universal binary"]]

@@ -19,10 +19,10 @@ class GtkQuartzEngine < Formula
 
   def install
     ENV.universal_binary if ARGV.build_universal?
-
+    system "autoreconf -i"
     system "./autogen.sh", "--disable-debug", "--disable-dependency-tracking",
                           "--prefix=#{prefix}"
     # system "cmake . #{std_cmake_parameters}"
-    system "make install" # if this fails, try separate make/make install steps
+    system "make install LIBTOOL=glibtool" # if this fails, try separate make/make install steps
   end
 end

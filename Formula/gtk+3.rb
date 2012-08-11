@@ -5,7 +5,6 @@ class Gtkx3 < Formula
   url 'http://ftp.gnome.org/pub/gnome/sources/gtk+/3.4/gtk+-3.4.4.tar.xz'
   sha256 'f154e460075034da4c0ce89c320025dcd459da2a1fdf32d92a09522eaca242c7'
 
-  depends_on :x11 => '2.5' # needs XInput2, introduced in libXi 1.3
   depends_on 'pkg-config' => :build
   depends_on 'xz' => :build
   depends_on 'glib'
@@ -22,7 +21,8 @@ class Gtkx3 < Formula
                           "--disable-dependency-tracking",
                           "--prefix=#{prefix}",
                           "--disable-glibtest",
-                          "--disable-introspection"
+                          "--disable-introspection",
+                          "--with-gdktarget=quartz"
     system "make install"
   end
 

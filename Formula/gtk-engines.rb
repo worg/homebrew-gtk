@@ -1,8 +1,8 @@
 require 'formula'
 
 class GtkEngines <Formula
-  url 'http://ftp.gnome.org/pub/GNOME/sources/gtk-engines/2.20/gtk-engines-2.20.2.tar.bz2'
   homepage 'http://www.gnome.org/'
+  url 'http://ftp.gnome.org/pub/GNOME/sources/gtk-engines/2.20/gtk-engines-2.20.2.tar.bz2'
   sha256 '15b680abca6c773ecb85253521fa100dd3b8549befeecc7595b10209d62d66b5'
 
   depends_on 'gettext'

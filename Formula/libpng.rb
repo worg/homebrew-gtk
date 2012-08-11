@@ -2,13 +2,16 @@ require 'formula'
 
 class Libpng < Formula
   homepage 'http://www.libpng.org/pub/png/libpng.html'
-  url 'ftp://ftp.simplesystems.org/pub/libpng/png/src/libpng-1.5.10.tar.xz'
-  md5 '9c2ac3c3a31de2ab867875718f8de18e'
+  url 'http://downloads.sf.net/project/libpng/libpng15/1.5.12/libpng-1.5.12.tar.gz'
+  sha1 'c329f3a9b720d7ae14e8205fa6e332236573704b'
 
-  keg_only :provided_by_osx
+  keg_only :provided_by_osx if MacOS::X11.installed?
 
   def options
-    [["--universal", "Builds a universal binary"]]
+  [
+    ['--universal', 'Build universal binaries.'],
+    ['--test', 'Build a debug build and run tests. NOTE: Tests may hang on "unix-streams".']
+  ]
   end
 
   def install

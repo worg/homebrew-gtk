@@ -2,8 +2,8 @@ require 'formula'
 
 class Pango < Formula
   homepage 'http://www.pango.org/'
-  url 'http://ftp.gnome.org/pub/GNOME/sources/pango/1.28/pango-1.28.4.tar.bz2'
-  sha256 '7eb035bcc10dd01569a214d5e2bc3437de95d9ac1cfa9f50035a687c45f05a9f'
+  url 'http://ftp.gnome.org/pub/GNOME/sources/pango/1.30/pango-1.30.1.tar.xz'
+  sha256 '3a8c061e143c272ddcd5467b3567e970cfbb64d1d1600a8f8e62435556220cbe'
 
   devel do
     url 'http://ftp.gnome.org/pub/gnome/sources/pango/1.29/pango-1.29.4.tar.bz2'

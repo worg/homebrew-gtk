@@ -1,9 +1,9 @@
 require 'formula'
 
 class Pycairo <Formula
-  url 'http://cairographics.org/releases/py2cairo-1.8.10.tar.gz'
+  url 'http://cairographics.org/releases/py2cairo-1.10.0.tar.bz2'
   homepage 'http://cairographics.org/pycairo/'
-  md5 '87421a6a70304120555ba7ba238f3dc3'
+  md5 '20337132c4ab06c1146ad384d55372c5'
 
   depends_on 'cairo'
 
